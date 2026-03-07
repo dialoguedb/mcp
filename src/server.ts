@@ -67,7 +67,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Save Session
   // ============================================
   if (enabled("save_dialogue")) server.tool(
-    "dialoguedb_save",
+    "save",
     "Save the current conversation to DialogueDB for cross-device access and persistence. Returns a session ID that can be used to resume later.",
     {
       id: z
@@ -159,7 +159,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Resume Session
   // ============================================
   if (enabled("resume_dialogue")) server.tool(
-    "dialoguedb_resume",
+    "resume",
     "Load a previously saved session from DialogueDB. Returns the full conversation history and state.",
     {
       id: z.string().describe("Session ID to resume"),
@@ -244,7 +244,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Search Sessions
   // ============================================
   if (enabled("search_dialogues")) server.tool(
-    "dialoguedb_search",
+    "search",
     "Search across all saved sessions by content, finding relevant conversations from your history.",
     {
       query: z.string().describe("Search query"),
@@ -332,7 +332,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: List Sessions
   // ============================================
   if (enabled("list_dialogues")) server.tool(
-    "dialoguedb_list",
+    "list",
     "List saved sessions, optionally filtered by date range or tags.",
     {
       limit: z
@@ -410,7 +410,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Add Message
   // ============================================
   if (enabled("add_message")) server.tool(
-    "dialoguedb_add_message",
+    "add_message",
     "Add a new message to an existing session.",
     {
       sessionId: z.string().describe("Session ID to add message to"),
@@ -484,7 +484,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: List Messages
   // ============================================
   if (enabled("list_messages")) server.tool(
-    "dialoguedb_list_messages",
+    "list_messages",
     "Load messages from a specific dialogue. Use after searching or listing dialogues to read the actual conversation content.",
     {
       dialogueId: z.string().describe("Dialogue ID to load messages from"),
@@ -565,7 +565,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Update Session State
   // ============================================
   if (enabled("update_dialogue_state")) server.tool(
-    "dialoguedb_update_state",
+    "update_state",
     "Update the state/context of an existing session. Useful for persisting conversation context, preferences, or working state.",
     {
       sessionId: z.string().describe("Session ID to update"),
@@ -635,7 +635,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Create Thread
   // ============================================
   if (enabled("create_thread")) server.tool(
-    "dialoguedb_create_thread",
+    "create_thread",
     "Create a new thread (sub-conversation) from an existing session. Useful for branching conversations or exploring alternatives.",
     {
       parentId: z.string().describe("Parent session ID to branch from"),
@@ -708,7 +708,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Create Memory
   // ============================================
   if (enabled("create_memory")) server.tool(
-    "dialoguedb_create_memory",
+    "create_memory",
     "Create a persistent memory — a fact, preference, or piece of knowledge that persists across all conversations. Use this to remember things like user preferences, important facts, project context, decisions, etc.",
     {
       value: z
@@ -789,7 +789,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Search Memories
   // ============================================
   if (enabled("search_memories")) server.tool(
-    "dialoguedb_search_memories",
+    "search_memories",
     "Semantically search across all stored memories. Use this to recall facts, preferences, or knowledge that was previously saved.",
     {
       query: z.string().describe("Natural language search query (e.g., 'preferred programming language', 'project deadlines')"),
@@ -863,7 +863,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: List Memories
   // ============================================
   if (enabled("list_memories")) server.tool(
-    "dialoguedb_list_memories",
+    "list_memories",
     "List all stored memories, optionally filtered by namespace or date range.",
     {
       namespace: z
@@ -937,7 +937,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Get Memory
   // ============================================
   if (enabled("get_memory")) server.tool(
-    "dialoguedb_get_memory",
+    "get_memory",
     "Retrieve a specific memory by its ID.",
     {
       id: z.string().describe("Memory ID to retrieve"),
@@ -1006,7 +1006,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Delete Memory
   // ============================================
   if (enabled("delete_memory")) server.tool(
-    "dialoguedb_delete_memory",
+    "delete_memory",
     "Delete a memory by its ID.",
     {
       id: z.string().describe("Memory ID to delete"),
@@ -1050,7 +1050,7 @@ export function createServer(config: ServerConfig = {}) {
   // TOOL: Update Memory Tags
   // ============================================
   if (enabled("update_memory_tags")) server.tool(
-    "dialoguedb_update_memory_tags",
+    "update_memory_tags",
     "Update the tags on an existing memory.",
     {
       id: z.string().describe("Memory ID to update"),
