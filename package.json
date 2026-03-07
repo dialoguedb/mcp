@@ -1,0 +1,52 @@
+{
+  "name": "dialogue-db-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for DialogueDB - persist and search AI conversations across devices",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "dialoguedb",
+    "ai",
+    "conversations",
+    "goose",
+    "claude"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "dialoguedb-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "dialogue-db": "^1.0.1",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "zod": "^3.25.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dialoguedb/mcp.git"
+  },
+  "homepage": "https://dialoguedb.com",
+  "author": "DialogueDB",
+  "license": "MIT"
+}

@@ -1,0 +1,26 @@
+name: Notify HQ
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate bot token
+        id: bot-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.DIALOGUEDB_BOT_APP_ID }}
+          private-key: ${{ secrets.DIALOGUEDB_BOT_PRIVATE_KEY }}
+          owner: dialoguedb
+          repositories: hq
+
+      - name: Trigger HQ
+        run: |
+          gh api repos/dialoguedb/hq/dispatches \
+            -f event_type=deployment \
+            --field client_payload='{"source":"mcp","version":"${{ github.event.release.tag_name }}"}'
+        env:
+          GH_TOKEN: ${{ steps.bot-token.outputs.token }}

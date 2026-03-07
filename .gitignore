@@ -1,0 +1,14 @@
+.vscode
+
+.DS_Store
+node_modules
+coverage
+test-results
+
+.env
+.env.*
+build
+dist
+
+_testing/
+development.ts
