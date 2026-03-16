@@ -248,6 +248,10 @@ export function createServer(config: ServerConfig = {}) {
     "Search across all saved sessions by content, finding relevant conversations from your history.",
     {
       query: z.string().describe("Search query"),
+      namespace: z
+        .string()
+        .optional()
+        .describe("Optional namespace to scope the search (e.g., a user ID)"),
       limit: z
         .number()
         .optional()
@@ -259,9 +263,12 @@ export function createServer(config: ServerConfig = {}) {
         .default(false)
         .describe("Also search within message content (default: false)"),
     },
-    async ({ query, limit, searchMessages }) => {
+    async ({ query, namespace, limit, searchMessages }) => {
       try {
-        const dialogues = await db.searchDialogues(query, { limit });
+        const dialogues = await db.searchDialogues(query, {
+          limit,
+          ...(namespace && { metadata: { namespace } }),
+        });
 
         const results = dialogues.map((d) => ({
           id: d.id,
@@ -335,6 +342,10 @@ export function createServer(config: ServerConfig = {}) {
     "list",
     "List saved sessions, optionally filtered by date range or tags.",
     {
+      namespace: z
+        .string()
+        .optional()
+        .describe("Optional namespace to filter by (e.g., a user ID)"),
       limit: z
         .number()
         .optional()
@@ -354,10 +365,11 @@ export function createServer(config: ServerConfig = {}) {
         .optional()
         .describe("Filter sessions created before this ISO date"),
     },
-    async ({ limit, order, startDate, endDate }) => {
+    async ({ namespace, limit, order, startDate, endDate }) => {
       try {
         const result = await db.listDialogues({
           limit,
+          ...(namespace && { namespace }),
           order,
           ...(startDate && { startDate }),
           ...(endDate && { endDate }),
@@ -941,10 +953,11 @@ export function createServer(config: ServerConfig = {}) {
     "Retrieve a specific memory by its ID.",
     {
       id: z.string().describe("Memory ID to retrieve"),
+      namespace: z.string().optional().describe("Namespace the memory belongs to"),
     },
-    async ({ id }) => {
+    async ({ id, namespace }) => {
       try {
-        const memory = await db.getMemory(id);
+        const memory = await db.getMemory(id, namespace);
 
         if (!memory) {
           return {
@@ -1010,10 +1023,11 @@ export function createServer(config: ServerConfig = {}) {
     "Delete a memory by its ID.",
     {
       id: z.string().describe("Memory ID to delete"),
+      namespace: z.string().optional().describe("Namespace the memory belongs to"),
     },
-    async ({ id }) => {
+    async ({ id, namespace }) => {
       try {
-        await api.memory.remove({ id });
+        await api.memory.remove({ id, ...(namespace && { namespace }) });
 
         return {
           content: [
@@ -1054,11 +1068,12 @@ export function createServer(config: ServerConfig = {}) {
     "Update the tags on an existing memory.",
     {
       id: z.string().describe("Memory ID to update"),
+      namespace: z.string().optional().describe("Namespace the memory belongs to"),
       tags: z.array(z.string()).describe("New tags to set on the memory"),
     },
-    async ({ id, tags }) => {
+    async ({ id, namespace, tags }) => {
       try {
-        const memory = await db.getMemory(id);
+        const memory = await db.getMemory(id, namespace);
 
         if (!memory) {
           return {
