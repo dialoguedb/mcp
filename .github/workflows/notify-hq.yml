@@ -18,9 +18,11 @@ jobs:
           repositories: hq
 
       - name: Trigger HQ
-        run: |
-          gh api repos/dialoguedb/hq/dispatches \
-            -f event_type=deployment \
-            --field client_payload='{"source":"mcp","version":"${{ github.event.release.tag_name }}"}'
         env:
           GH_TOKEN: ${{ steps.bot-token.outputs.token }}
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          jq -n --arg version "$VERSION" '{
+            event_type: "deployment",
+            client_payload: { source: "mcp", version: $version }
+          }' | gh api repos/dialoguedb/hq/dispatches --input -
